@@ -6,33 +6,34 @@ import {
     TclienteResponse,
 } from "../interfaces/cliente.interface";
 import AppError from "../error";
+import { clienteSchemaResponse } from "../schemas/cliente.schema";
 
 export const createUserService = async (
     data: TclienteRequest
 ): Promise<TclienteResponse> => {
     const { email, nomeCompleto, password, telefone } = data;
-    const clienteRepo = AppDataSource.getRepository(Cliente);
+    const clienteRepository = AppDataSource.getRepository(Cliente);
 
-    const findCliente = await clienteRepo.findOne({
+    const findCliente = await clienteRepository.findOne({
         where: {
             email,
         },
     });
-    console.log(findCliente);
+
     if (findCliente) {
         throw new AppError("Cliente already exists", 409);
     }
 
     const hashPassword = await hash(password, 10);
 
-    const cliente = clienteRepo.create({
+    const cliente = clienteRepository.create({
         nomeCompleto,
         email,
         telefone,
         password: hashPassword,
     });
 
-    await clienteRepo.save(cliente);
-
-    return cliente;
+    await clienteRepository.save(cliente);
+    cliente.id = cliente.id.toString();
+    return clienteSchemaResponse.parse(cliente);
 };
