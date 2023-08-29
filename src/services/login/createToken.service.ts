@@ -1,7 +1,7 @@
 import { compare } from "bcryptjs";
 import { AppDataSource } from "../../data-source";
-import Cliente from "../../entities/cliente.entitie";
-import AppError from "../../error";
+import User from "../../entities/user.entitie";
+import AppError from "../../errors";
 import { TloginRequest } from "../../interfaces/login.interface";
 import Jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -9,32 +9,43 @@ import "dotenv/config";
 export const createTokenService = async ({
     email,
     password,
-}: TloginRequest): Promise<string> => {
-    const clienteRepository = AppDataSource.getRepository(Cliente);
+}: TloginRequest): Promise<object> => {
+    const clientRepository = AppDataSource.getRepository(User);
 
-    const cliente = await clienteRepository.findOne({
+    const user = await clientRepository.findOne({
         where: {
             email,
         },
     });
 
-    if (!cliente) {
+    if (!user) {
         throw new AppError("Invalid Credentials", 403);
     }
-
-    const passwordMath = await compare(password, cliente.password);
+    const passwordMath = await compare(password, user.password);
 
     if (!password) {
         throw new AppError("Invalid Credentials", 403);
     }
 
     const token = Jwt.sign(
-        { username: cliente.nomeCompleto },
+        { username: user.nomeCompleto },
         process.env.SECRET_KEY!,
         {
             expiresIn: process.env.EXPIRES_IN!.toString(),
-            subject: cliente.id.toString(),
+            subject: user.id.toString(),
         }
     );
-    return token;
+
+    const authResponse = {
+        user: {
+            id: user.id,
+            nomeCompleto: user.nomeCompleto,
+            email: user.email,
+            telefone: user.telefone,
+            dataRegistro: user.dataRegistro,
+        },
+        token,
+    };
+
+    return authResponse;
 };

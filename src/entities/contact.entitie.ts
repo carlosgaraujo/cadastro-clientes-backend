@@ -1,31 +1,32 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    CreateDateColumn,
 } from "typeorm";
-import Cliente from "./cliente.entitie";
+import User from "./user.entitie";
 
-@Entity("contatos")
-class Contato {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity("contacts")
+class Contact {
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column()
-  nomeCompleto: string;
+    @Column()
+    nomeCompleto: string;
 
-  @Column()
-  email: string;
+    @Column()
+    email: string;
 
-  @Column()
-  telefone: string;
+    @Column()
+    telefone: string;
 
-  @CreateDateColumn({ type: "date" })
-  dataRegistro: string;
+    @CreateDateColumn({ type: "date" })
+    dataRegistro: string;
 
-  @ManyToOne(() => Cliente, (cliente) => cliente.contatos)
-  cliente: Cliente;
+    @ManyToOne(() => User, (user) => user.contacts)
+    user: User;
+    user: any;
 }
 
-export default Contato;
+export default Contact;

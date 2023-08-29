@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import AppError from "../error";
+import AppError from "../errors";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { error } from "console";
@@ -24,9 +24,7 @@ export const checkToken = async (
             if (error) {
                 throw new AppError(error.message, 401);
             }
-            res.locals.cliente = {
-                id: Number(decoded.id),
-            };
+            res.locals.user = decoded.sub;
             return next();
         }
     );

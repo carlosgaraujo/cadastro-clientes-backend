@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const clienteSchema = z.object({
+export const clientSchema = z.object({
     id: z.string(),
     nomeCompleto: z.string(),
     email: z.string().email(),
@@ -12,11 +12,13 @@ export const clienteSchema = z.object({
     dataRegistro: z.string(),
 });
 
-export const clienteSchemaRequest = clienteSchema.omit({
+export const clientSchemaRequest = clientSchema.omit({
     id: true,
     dataRegistro: true,
 });
 
-export const clienteSchemaResponse = clienteSchema.omit({
+export const clientSchemaResponse = clientSchema.omit({
     password: true,
 });
+export const clientSchemaUpdate = clientSchemaResponse.partial()
+export const clientSchemaArray = clientSchemaResponse.array()

@@ -2,15 +2,20 @@ import "reflect-metadata";
 import "express-async-errors";
 import express, { Application } from "express";
 
-import userRouter from "./routes/cliente.routes";
-import { handleError } from "./error";
+import userRouter from "./routes/user.routes";
+import { handleError } from "./errors";
 import loginRoutes from "./routes/login.routes";
+import contactRouter from "./routes/contact.routes";
+import cors from "cors";
 
 const app: Application = express();
-
 app.use(express.json());
-app.use("/login", loginRoutes);
+app.use(cors());
+
 app.use("/users", userRouter);
+app.use("/login", loginRoutes);
+app.use("/contact", contactRouter);
 
 app.use(handleError);
+
 export default app;
