@@ -10,33 +10,18 @@ import {
     contactSchemaArray,
     contactSchemaResponse,
 } from "../../schemas/contact.schema";
+import { Repository } from "typeorm";
 
-export const listContactService = async (
-    id: number
-): Promise<TContactArray> => {
-    const contactRepository = AppDataSource.getRepository(Contact);
-    const clientRepository = AppDataSource.getRepository(User);
+export const listContactService = async (): Promise<TContactResponse> => {
+    const contactRepository: Repository<Contact> =
+        AppDataSource.getRepository(Contact);
 
-    const user = await clientRepository.findOne({
-        where: {
-            id: id,
-        },
-        relations: ["contacts"],
-    });
-
-    if (!user) {
-        throw new AppError("User Not Found", 404);
-    }
-
-    const contacts = await contactRepository.find({
-        where: {
-            user: { id: user.id.toString() },
+    const contacts: Contact[] | null = await contactRepository.find({
+        relations: {
+            user: true,
         },
     });
-    const contactsAsString = contacts.map((contact) => ({
-        ...contact,
-        id: contact.id.toString(),
-    }));
 
-    return contactSchemaArray.parse(contactsAsString);
+    const returnContacts:any = contactSchemaArray.parse(contacts);
+    return returnContacts;
 };

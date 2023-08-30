@@ -7,17 +7,20 @@ import {
     TContactResponse,
 } from "../../interfaces/contact.interface";
 import { contactSchema } from "../../schemas/contact.schema";
+import { Repository } from "typeorm";
 
 export const createContactService = async (
     data: TContactRequest,
-    contactId: number
+    id: number
 ): Promise<TContactResponse> => {
-    const contactRepository = AppDataSource.getRepository(Contact);
-    const clientRepository = AppDataSource.getRepository(User);
+    const userRepository: Repository<User> = AppDataSource.getRepository(User);
 
-    const user = await clientRepository.findOne({
+    const contactRepository: Repository<Contact> =
+        AppDataSource.getRepository(Contact);
+
+    const user = await userRepository.findOne({
         where: {
-            id: contactId,
+            id: id,
         },
     });
 
@@ -27,12 +30,10 @@ export const createContactService = async (
 
     const contact = contactRepository.create({
         ...data,
-        user,
+        user: user,
     });
 
     await contactRepository.save(contact);
-
-    contact.id = contact.id.toString();
 
     return contactSchema.parse(contact);
 };

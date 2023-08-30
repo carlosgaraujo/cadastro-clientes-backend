@@ -1,3 +1,4 @@
+import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import Contact from "../../entities/contact.entitie";
 import AppError from "../../errors";
@@ -11,12 +12,11 @@ export const updateContactService = async (
     data: TContactUpdate,
     id: number
 ): Promise<TContactResponse> => {
-    const contactRepository = AppDataSource.getRepository(Contact);
+    const contactRepository: Repository<Contact> =
+        AppDataSource.getRepository(Contact);
 
-    const oldContact = await contactRepository.findOne({
-        where: {
-            id: id,
-        },
+    const oldContact = await contactRepository.findOneBy({
+        id: id,
     });
 
     if (!oldContact) {
@@ -29,6 +29,6 @@ export const updateContactService = async (
     });
 
     await contactRepository.save(newContactData);
-    newContactData.id = newContactData.id.toString();
+    
     return contactSchema.parse(newContactData);
 };

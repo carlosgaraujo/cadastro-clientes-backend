@@ -6,5 +6,5 @@ export const createTokenController = async (req: Request, res: Response) => {
 
     const token = await createTokenService({ email, password });
 
-    return res.json(token);
+    return res.status(200).json(token);
 };

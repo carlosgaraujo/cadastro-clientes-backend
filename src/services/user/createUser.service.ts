@@ -1,39 +1,17 @@
-import { hash } from "bcryptjs";
 import { AppDataSource } from "../../data-source";
 import User from "../../entities/user.entitie";
-import {
-    TclientRequest,
-    TclientResponse,
-} from "../../interfaces/user.interface";
-import AppError from "../../errors";
-import { clientSchemaResponse } from "../../schemas/user.schema";
+import { TUserRequest, TUser } from "../../interfaces/user.interface";
+import { userSchema } from "../../schemas/user.schema";
+import { Repository } from "typeorm";
 
-export const createUserService = async (
-    data: TclientRequest
-): Promise<TclientResponse> => {
-    const { email, nomeCompleto, password, telefone } = data;
-    const clientRepository = AppDataSource.getRepository(User);
+export const createUserService = async (data: TUserRequest): Promise<TUser> => {
+    const userRepository: Repository<User> = AppDataSource.getRepository(User);
 
-    const findClient = await clientRepository.findOne({
-        where: {
-            email,
-        },
-    });
+    const user: User = userRepository.create(data);
 
-    if (findClient) {
-        throw new AppError("User already exists", 409);
-    }
+    await userRepository.save(user);
 
-    const hashPassword = await hash(password, 10);
+    const returnUser = userSchema.parse(user);
 
-    const user = clientRepository.create({
-        nomeCompleto,
-        email,
-        telefone,
-        password: hashPassword,
-    });
-
-    await clientRepository.save(user);
-    user.id = user.id.toString();
-    return clientSchemaResponse.parse(user);
+    return returnUser;
 };

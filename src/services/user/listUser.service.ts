@@ -1,19 +1,19 @@
+import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import User from "../../entities/user.entitie";
-import { TClientArray, TclientResponse } from "../../interfaces/user.interface";
-import { clientSchemaArray } from "../../schemas/user.schema";
+import { TUserArray, TUserResponse } from "../../interfaces/user.interface";
+import { userSchemaArray } from "../../schemas/user.schema";
 
-export const listAllClientSevice = async (): Promise<TClientArray> => {
-    const clientRepository = AppDataSource.getRepository(User);
+export const listAllClientSevice = async (): Promise<TUserResponse | null> => {
+    const userRepository: Repository<User> = AppDataSource.getRepository(User);
 
-    const user: User[] = await clientRepository.find();
+    const user: User[] | null = await userRepository.find({
+        relations: {
+            contacts: true,
+        },
+    });
 
-    const clientAsStyring = user.map((user) => ({
-        ...user,
-        id: user.id.toString(),
-    }));
+    const returnUserArray: any = userSchemaArray.parse(user);
 
-    const returnClient = clientSchemaArray.parse(clientAsStyring);
-    console.log(returnClient);
-    return returnClient;
+    return returnUserArray;
 };

@@ -25,7 +25,6 @@ export const checkToken = async (
                 throw new AppError(error.message, 401);
             }
             res.locals.user = decoded.sub;
-            return next();
-        }
-    );
+        });
+    return next();
 };

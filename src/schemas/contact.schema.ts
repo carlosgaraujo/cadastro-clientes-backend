@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const contactSchema = z.object({
-    id: z.string(),
+    id: z.number(),
     nomeCompleto: z.string(),
     email: z.string().email(),
     telefone: z.string(),
@@ -13,9 +13,7 @@ export const contactSchemaRequest = contactSchema.omit({
     dataRegistro: true,
 });
 
-export const contactSchemaResponse = contactSchema.omit({
-    id: true,
-});
+export const contactSchemaResponse = contactSchema
 
 export const contactSchemaUpdate = contactSchemaRequest.partial();
 

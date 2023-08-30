@@ -26,7 +26,6 @@ class Contact {
 
     @ManyToOne(() => User, (user) => user.contacts)
     user: User;
-    user: any;
 }
 
 export default Contact;

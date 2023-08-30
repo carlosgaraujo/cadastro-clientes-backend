@@ -10,9 +10,9 @@ export const createTokenService = async ({
     email,
     password,
 }: TloginRequest): Promise<object> => {
-    const clientRepository = AppDataSource.getRepository(User);
+    const userRepository = AppDataSource.getRepository(User);
 
-    const user = await clientRepository.findOne({
+    const user = await userRepository.findOne({
         where: {
             email,
         },

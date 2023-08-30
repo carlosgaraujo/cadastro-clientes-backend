@@ -1,27 +1,34 @@
 import { Router } from "express";
 import {
     createUserController,
-    deleteClientController,
+    deleteUserController,
+    listUserByIdController,
     listUsersControllers,
-    updateClientController,
+    updateUserController,
 } from "../controllers/user.controller";
 import { checkBody } from "../middlewares/checkBody.middleware";
-import {
-    clientSchemaRequest,
-    clientSchemaUpdate,
-} from "../schemas/user.schema";
-import { checkToken } from "../middlewares/ensureAuth.middleware";
+import { userSchemaRequest, userSchemaUpdate } from "../schemas/user.schema";
+import { checkToken } from "../middlewares/checkToken.middleware";
+import { verifyEmail } from "../middlewares/checkEmail.middlewaew";
+import checkUser from "../middlewares/checkUser.middleware";
 
 const userRouter: Router = Router();
 
-userRouter.post("", checkBody(clientSchemaRequest), createUserController);
+userRouter.post(
+    "",
+    verifyEmail,
+    checkBody(userSchemaRequest),
+    createUserController
+);
 userRouter.get("", listUsersControllers);
-userRouter.delete("/:id", deleteClientController);
+userRouter.get("/:id", checkUser, checkToken, listUserByIdController);
+userRouter.delete("/:id", checkUser, deleteUserController);
 userRouter.patch(
     "/:id",
+    checkUser,
     checkToken,
-    checkBody(clientSchemaUpdate),
-    updateClientController
+    checkBody(userSchemaUpdate),
+    updateUserController
 );
 
 export default userRouter;

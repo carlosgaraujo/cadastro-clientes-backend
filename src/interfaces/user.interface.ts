@@ -1,14 +1,15 @@
 import { z } from "zod";
 import {
-    clientSchema,
-    clientSchemaArray,
-    clientSchemaRequest,
-    clientSchemaResponse,
+    userSchema,
+    userSchemaArray,
+    userSchemaRequest,
+    userSchemaResponse,
 } from "../schemas/user.schema";
 import { DeepPartial } from "typeorm";
 
-export type Tclient = z.infer<typeof clientSchema>;
-export type TclientRequest = z.infer<typeof clientSchemaRequest>;
-export type TclientResponse = z.infer<typeof clientSchemaResponse>;
-export type TClientUpdate = DeepPartial<TclientRequest>;
-export type TClientArray = z.infer<typeof clientSchemaArray>;
+export type TUser = z.infer<typeof userSchema>;
+export type TUserRequest = z.infer<typeof userSchemaRequest>;
+export type TUserResponse = z.infer<typeof userSchemaResponse>;
+export type TUserUpdate = DeepPartial<TUserRequest>;
+export type TUserUpdate1 = z.infer<typeof userSchemaRequest>;
+export type TUserArray = z.infer<typeof userSchemaArray>;
