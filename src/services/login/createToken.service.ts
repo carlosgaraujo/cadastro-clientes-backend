@@ -5,16 +5,24 @@ import AppError from "../../errors";
 import { TloginRequest } from "../../interfaces/login.interface";
 import Jwt from "jsonwebtoken";
 import "dotenv/config";
+import Contact from "../../entities/contact.entitie";
 
 export const createTokenService = async ({
     email,
     password,
 }: TloginRequest): Promise<object> => {
     const userRepository = AppDataSource.getRepository(User);
+    const contactRepository = AppDataSource.getRepository(Contact);
 
     const user = await userRepository.findOne({
         where: {
             email,
+        },
+    });
+
+    const contacts = await userRepository.find({
+        relations: {
+            contacts: true,
         },
     });
 
@@ -43,6 +51,7 @@ export const createTokenService = async ({
             email: user.email,
             telefone: user.telefone,
             dataRegistro: user.dataRegistro,
+            contacts: contacts,
         },
         token,
     };

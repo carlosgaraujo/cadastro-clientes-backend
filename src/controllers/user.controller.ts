@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { createUserService } from "../services/user/createUser.service";
 import { listAllClientSevice } from "../services/user/listUser.service";
-import { deleteClientService } from "../services/user/deleteUser.service";
-import { updateClientService } from "../services/user/updateUser.service";
+import { deleteUserService } from "../services/user/deleteUser.service";
+import { updateUserService } from "../services/user/updateUser.service";
 import { TUser, TUserUpdate, TUserUpdate1 } from "../interfaces/user.interface";
 import { listUserByIdService } from "../services/user/listUserById.service";
 
@@ -24,7 +24,7 @@ export const deleteUserController = async (
     res: Response
 ): Promise<Response> => {
     const userId = parseInt(req.params.id);
-    await deleteClientService(userId);
+    await deleteUserService(userId);
 
     return res.status(204).send();
 };
@@ -36,7 +36,7 @@ export const updateUserController = async (
     const id = parseInt(req.params.id);
     const bodyUser: TUserUpdate1 = req.body;
 
-    const updateUser = await updateClientService(bodyUser, id);
+    const updateUser = await updateUserService(bodyUser, id);
 
     return res.json(updateUser);
 };

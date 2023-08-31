@@ -2,9 +2,9 @@ import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import User from "../../entities/user.entitie";
 import { TUserUpdate, TUserResponse } from "../../interfaces/user.interface";
-import {userSchemaUpdate } from "../../schemas/user.schema";
+import { userSchemaUpdate } from "../../schemas/user.schema";
 
-export const updateClientService = async (
+export const updateUserService = async (
     data: TUserUpdate,
     id: number
 ): Promise<TUserResponse> => {
@@ -21,7 +21,7 @@ export const updateClientService = async (
 
     await userRepository.save(userUpdate);
 
-    const returnUser:any = userSchemaUpdate.parse(userUpdate);
-    
+    const returnUser: any = userSchemaUpdate.parse(userUpdate);
+
     return returnUser;
 };
